@@ -18,5 +18,19 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-require 'ffi/clamav/clamav'
-require 'ffi/clamav/version'
+require 'ffi/clamav/library'
+
+module FFI
+  module ClamAV
+    @initialized = false
+
+    def self.init
+      if @initialized
+        raise("already initialized ClamAV")
+      end
+
+      @initialized = true
+      return cl_init(0x0)
+    end
+  end
+end

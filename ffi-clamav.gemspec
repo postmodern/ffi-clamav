@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
                   $LOAD_PATH << lib_dir unless $LOAD_PATH.include?(lib_dir)
 
                   require 'ffi/clamav/version'
-                  FFI::Clamav::VERSION
+                  FFI::ClamAV::VERSION
                 end
 
   gem.summary     = gemspec['summary']

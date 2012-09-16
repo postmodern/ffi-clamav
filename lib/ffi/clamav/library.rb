@@ -28,19 +28,19 @@ module FFI
 
     ffi_lib ['clamav', 'libclamav.so.6']
 
-    attach_function :cl_init, [:uint], :int
+    attach_function :cl_init, [:uint], :cl_error_t
 
     attach_function :cl_engine_new, [], :pointer
-    attach_function :cl_engine_set_num, [:pointer, :cl_engine_field, :long_long], :int
+    attach_function :cl_engine_set_num, [:pointer, :cl_engine_field, :long_long], :cl_error_t
     attach_function :cl_engine_get_num, [:pointer, :cl_engine_field, :pointer], :long_long
-    attach_function :cl_engine_set_str, [:pointer, :cl_engine_field, :string], :int
+    attach_function :cl_engine_set_str, [:pointer, :cl_engine_field, :string], :cl_error_t
     attach_function :cl_engine_get_str, [:pointer, :cl_engine_field, :pointer], :string
     attach_function :cl_engine_settings_copy, [:pointer], :pointer
-    attach_function :cl_engine_settings_apply, [:pointer, :pointer], :int
-    attach_function :cl_engine_settings_free, [:pointer], :int
-    attach_function :cl_engine_compile, [:pointer], :int
-    attach_function :cl_engine_addref, [:pointer], :int
-    attach_function :cl_engine_free, [:pointer], :int
+    attach_function :cl_engine_settings_apply, [:pointer, :pointer], :cl_error_t
+    attach_function :cl_engine_settings_free, [:pointer], :cl_error_t
+    attach_function :cl_engine_compile, [:pointer], :cl_error_t
+    attach_function :cl_engine_addref, [:pointer], :cl_error_t
+    attach_function :cl_engine_free, [:pointer], :cl_error_t
 
     attach_function :cl_engine_set_clcb_pre_scan, [:pointer, :clcb_pre_scan], :void
     attach_function :cl_engine_set_clcb_post_scan, [:pointer, :clcb_post_scan], :void
@@ -51,14 +51,14 @@ module FFI
     attach_function :cl_engine_set_clcb_hash, [:pointer, :clcb_hash], :void
 
     # file scanning
-    attach_function :cl_scandesc, [:int, :pointer, :pointer, :pointer, :uint], :int
-    attach_function :cl_scandesc_callback, [:int, :pointer, :pointer, :pointer, :uint, :pointer], :int
+    attach_function :cl_scandesc, [:int, :pointer, :pointer, :pointer, :uint], :cl_error_t
+    attach_function :cl_scandesc_callback, [:int, :pointer, :pointer, :pointer, :uint, :pointer], :cl_error_t
 
-    attach_function :cl_scanfile, [:string, :pointer, :pointer, :pointer, :uint], :int
-    attach_function :cl_scanfile_callback, [:string, :pointer, :pointer, :pointer, :uint, :pointer], :int
+    attach_function :cl_scanfile, [:string, :pointer, :pointer, :pointer, :uint], :cl_error_t
+    attach_function :cl_scanfile_callback, [:string, :pointer, :pointer, :pointer, :uint, :pointer], :cl_error_t
 
     # database handling
-    attach_function :cl_load, [:string, :pointer, :pointer, :uint], :int
+    attach_function :cl_load, [:string, :pointer, :pointer, :uint], :cl_error_t
     attach_function :cl_retdbdir, [], :string
 
     #
@@ -72,9 +72,9 @@ module FFI
     attach_function :cl_cvdfree, [:pointer], :void
 
     # db dir stat functions
-    attach_function :cl_statinidir, [:string, :pointer], :int
+    attach_function :cl_statinidir, [:string, :pointer], :cl_error_t
     attach_function :cl_statchkdir, [:pointer], :int
-    attach_function :cl_statfree, [:pointer], :int
+    attach_function :cl_statfree, [:pointer], :cl_error_t
     
     # count signatures
     attach_function :cl_countsigs, [:string, :uint, :pointer], :int
@@ -87,7 +87,7 @@ module FFI
     attach_function :cl_retver, [], :string
 
     # others
-    attach_function :cl_strerror, [:int], :string
+    attach_function :cl_strerror, [:cl_error_t], :string
 
   end
 end

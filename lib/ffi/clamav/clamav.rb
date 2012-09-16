@@ -24,6 +24,10 @@ module FFI
   module ClamAV
     @initialized = false
 
+    def self.db_dir
+      cl_retdbdir
+    end
+
     def self.init
       if @initialized
         raise("already initialized ClamAV")

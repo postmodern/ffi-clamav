@@ -19,6 +19,7 @@
 #
 
 require 'ffi/clamav/library'
+require 'ffi/clamav/types'
 require 'ffi/clamav/settings'
 require 'ffi/clamav/error'
 
@@ -27,6 +28,10 @@ require 'time'
 module FFI
   module ClamAV
     class Engine < FFI::AutoPointer
+
+      BYTECODE_SECURITY = ClamAV.enum_type(:cl_bytecode_security)
+
+      BYTECODE_MODE = ClamAV.enum_type(:cl_bytecode_mode)
 
       def initialize(ptr=ClamAV.cl_engine_new)
         super(ptr)
@@ -165,11 +170,11 @@ module FFI
       end
 
       def bytecode_security
-        get_field :bytecode_security, :number
+        BYTECODE_SECURITY[get_field(:bytecode_security,:number)]
       end
 
       def bytecode_security=(new_bytecode_security)
-        set_field :bytecode_security, :number, new_bytecode_security
+        set_field :bytecode_security, :number, BYTECODE_SECURITY[new_bytecode_security]
       end
 
       def bytecode_timeout
@@ -181,11 +186,11 @@ module FFI
       end
 
       def bytecode_mode
-        get_field :bytecode_mode, :number
+        BYTECODE_MODE[get_field(:bytecode_mode,:number)]
       end
 
       def bytecode_mode=(new_bytecode_mode)
-        set_field :bytecode_mode, :number, new_bytecode_mode
+        set_field :bytecode_mode, :number, BYTECODE_MODE[new_bytecode_mode]
       end
 
       def compile!
@@ -198,8 +203,8 @@ module FFI
         error = FFI::MemoryPointer.new(:int)
 
         value = case type
-                when :string then ClamAV.cl_engine_get_str(field,error)
-                when :number then ClamAV.cl_engine_get_num(field,error)
+                when :string then ClamAV.cl_engine_get_str(self,field,error)
+                when :number then ClamAV.cl_engine_get_num(self,field,error)
                 end
 
         if (errno = error.read_int) > 0
@@ -211,9 +216,9 @@ module FFI
 
       def set_field(field,type,value)
         Error.catch do
-          case value
-          when :string then ClamAV.cl_engine_set_str(field,value,error)
-          when :number then ClamAV.cl_engine_set_num(field,value,error)
+          case type
+          when :string then ClamAV.cl_engine_set_str(self,field,value)
+          when :number then ClamAV.cl_engine_set_num(self,field,value)
           else
             raise(TypeError,"field type value must be :string or :number")
           end

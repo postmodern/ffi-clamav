@@ -27,6 +27,10 @@ module FFI
   module ClamAV
     class Engine < FFI::AutoPointer
 
+      def initialize(ptr=ClamAV.cl_engine_new)
+        super(ptr)
+      end
+
       def self.release(ptr)
         ClamAV.cl_engine_free(ptr)
       end

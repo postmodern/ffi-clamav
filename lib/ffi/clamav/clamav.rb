@@ -19,22 +19,16 @@
 #
 
 require 'ffi/clamav/library'
+require 'ffi/clamav/error'
 
 module FFI
   module ClamAV
-    @initialized = false
-
     def self.db_dir
       cl_retdbdir
     end
 
     def self.init
-      if @initialized
-        raise("already initialized ClamAV")
-      end
-
-      @initialized = true
-      return cl_init(0x0)
+      Error.catch { cl_init(0x0) }
     end
   end
 end

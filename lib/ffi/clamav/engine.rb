@@ -20,6 +20,7 @@
 
 require 'ffi/clamav/library'
 require 'ffi/clamav/settings'
+require 'ffi/clamav/error'
 
 require 'time'
 
@@ -201,22 +202,22 @@ module FFI
                 when :number then ClamAV.cl_engine_get_num(field,error)
                 end
 
-        # TODO: check and raise errors
+        if (errno = error.read_int) > 0
+          raise(Error,Error::TYPES[errno])
+        end
 
         return value
       end
 
       def set_field(field,type,value)
-        error = FFI::MemoryPointer.new(:int)
-
-        case value
-        when :string then ClamAV.cl_engine_set_str(field,value,error)
-        when :number then ClamAV.cl_engine_set_num(field,value,error)
-        else
-          raise(TypeError,"field value must be a String or Integer")
+        Error.catch do
+          case value
+          when :string then ClamAV.cl_engine_set_str(field,value,error)
+          when :number then ClamAV.cl_engine_set_num(field,value,error)
+          else
+            raise(TypeError,"field type value must be :string or :number")
+          end
         end
-
-        # TODO: check and raise errors
 
         return value
       end

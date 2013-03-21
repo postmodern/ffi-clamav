@@ -1,8 +1,7 @@
 require 'spec_helper'
-
 require 'ffi/clamav/error'
 
-describe Error do
+describe FFI::ClamAV::Error do
   let(:type) { :virus }
 
   describe "#initialize" do
